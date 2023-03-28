@@ -33,7 +33,7 @@ int len(long number)
     return len_n;
 }
 
-// get_sum_of_numbers_from_last_digit 
+// get_sum_of_numbers_from_last_digit
 int get_sum_1(long number)
 {
     int sum_1 = 0;
@@ -51,9 +51,24 @@ int get_sum_2(long number)
 {
     int sum_2 = 0;
     number /= 10;
+    int product;
     while (number != 0)
     {
-        sum_2 += (number % 10) * 2;
+        product = (number % 10) * 2;
+
+        // if product is double digits sum digits separately
+        if (product > 9)
+        {
+            sum_2 += product % 10;
+            product /= 10;
+            sum_2 += product % 10;
+        }
+
+        // else sum digit
+        else
+        {
+            sum_2 += product;
+        }
         number /= 100;
     }
     return sum_2;
@@ -99,7 +114,7 @@ int second_digit(long number)
 
 }
 
-// validator if valid get card provider else invalid 
+// validator if valid get card provider else invalid
 void get_type_or_invalid(long number)
 {
     int len_n = len(number);
@@ -112,6 +127,7 @@ void get_type_or_invalid(long number)
         if (len_n == 15 && first == 3 && (second == 4 || second == 7))
         {
             printf("AMEX\n");
+
         }
 
         else if (len_n == 16 && first == 5 && (second >= 1 && second <= 5))
@@ -133,7 +149,4 @@ void get_type_or_invalid(long number)
     {
         printf("INVALID\n");
     }
-
 }
-
-
