@@ -1,7 +1,18 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": []
+    "configurations": [
+        {
+            "name": "C gdb",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/home/charles/VS_Projects/CS50/week1/credit",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "/home/charles/VS_Projects/CS50/week1",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb" // or the path to your gdb executable
+        }
+    ]
 }
