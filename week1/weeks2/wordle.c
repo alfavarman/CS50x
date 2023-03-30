@@ -1,67 +1,211 @@
 #include <cs50.h>
+#include <stdlib.h>
 #include <stdio.h>
-#include <ctype.h>
+#include <string.h>
+#include <time.h>
 
-int validate_cm_arg(int cm_arg);
+// each of our text files contains 1000 words
+#define LISTSIZE 1000
 
-int main(int argc, int argv[])
+// values for colors and score (EXACT == right letter, right place; CLOSE == right letter, wrong place; WRONG == wrong letter)
+#define EXACT 2
+#define CLOSE 1
+#define WRONG 0
+
+// ANSI color codes for boxed in letters
+#define GREEN   "\e[38;2;255;255;255;1m\e[48;2;106;170;100;1m"
+#define YELLOW  "\e[38;2;255;255;255;1m\e[48;2;201;180;88;1m"
+#define RED     "\e[38;2;255;255;255;1m\e[48;2;220;20;60;1m"
+#define RESET   "\e[0;39m"
+
+// user-defined function prototypes
+string get_guess(int wordsize);
+int check_word(string guess, int wordsize, int status[], string choice);
+void print_word(string guess, int wordsize, int status[]);
+int validate_cm_arg(string cm_arg[]);
+
+int main(int argc, string argv[])
 {
-    int cm_arg = argv[1];
+    // validate command line args correctly used
+    // ensure argv[1] is either 5, 6, 7, or 8 and store that value in wordsize instead
 
-    validate_cm_arg(cm_arg);
+    int wordsize = validate_cm_arg(argv);
+    if (wordsize == 1)
+    {
+        return 1;
+    }
+
+    // open correct file, each file has exactly LISTSIZE words
+    char wl_filename[6];
+    sprintf(wl_filename, "%i.txt", wordsize);
+    FILE *wordlist = fopen(wl_filename, "r");
+    if (wordlist == NULL)
+    {
+        printf("Error opening file %s.\n", wl_filename);
+        return 1;
+    }
+
+    // load word file into an array of size LISTSIZE
+    char options[LISTSIZE][wordsize + 1];
+
+    for (int i = 0; i < LISTSIZE; i++)
+    {
+        fscanf(wordlist, "%s", options[i]);
+    }
+
+    // pseudorandomly select a word for this game
+    srand(time(NULL));
+    string choice = options[rand() % LISTSIZE];
+
+    // allow one more guess than the length of the word
+    int guesses = wordsize + 1;
+    bool won = false;
+
+    // print greeting, using ANSI color codes to demonstrate
+    printf(GREEN"This is WORDLE50"RESET"\n");
+    printf("You have %i tries to guess the %i-letter word I'm thinking of\n", guesses, wordsize);
+
+    // main game loop, one iteration for each guess
+    for (int i = 0; i < guesses; i++)
+    {
+        // obtain user's guess
+        string guess = get_guess(wordsize);
+
+        // array to hold guess status, initially set to zero
+        int status[wordsize];
+
+        // set all elements of status array initially to 0, aka WRONG
+        for (int j = 0; j < wordsize; j++)
+        {
+            status[j] = 0;
+        }
+
+        // Calculate score for the guess
+        int score = check_word(guess, wordsize, status, choice);
+
+        printf("Guess %i: ", i + 1);
+
+        // Print the guess
+        print_word(guess, wordsize, status);
+
+        // if they guessed it exactly right, set terminate loop
+        if (score == EXACT * wordsize)
+        {
+            won = true;
+            break;
+        }
+    }
+
+    // Print the game's result
+    if (won)
+    {
+        printf("You won!\n");
+    }
+
+    else
+    {
+        printf("You miss it, i meant %s\n", choice);
+    }
 
 
-
-
+    // that's all folks!
+    return 0;
 }
 
-int validate_cm_arg(int cm_arg)
+int validate_cm_arg(string cm_arg[])
 {
-    if (!cm_arg)
+    // if comand line arg was not provided
+    if ((!cm_arg[1]) || (cm_arg[2]))
     {
         printf("Usage: ./wordle wordsize");
         return 1;
     }
-    else if (cm_arg < 5 && cm_arg > 8)
+    // if provided cm_arg is not in range 5-8 inclusive
+    else if (atoi(cm_arg[1]) < 5 && atoi(cm_arg[1]) > 8)
     {
         printf("Error: wordsize must be either 5, 6, 7, or 8");
         return 1;
     }
-}
-
-// get lenght of string
-int len(string word)
-{
-    int len_w = 0;
-
-    for (int i = 0; word[i] != '\0'; i++)
-    {
-        len_w++;
-    }
-
-    return len_w;
-}
-
-bool isvalid_guess(int lword, string guess)
-{
-    if (isalpha(guess) && len(guess) == lword)
-    {
-        return true;
-    }
+    // if comand line arg is correc return it as int.
     else
     {
-        return false;
+        return (atoi(cm_arg[1]));
     }
 }
 
-string get_guess(int lword)
+string get_guess(int wordsize)
 {
+    // prompt user for guess with correct lengh.
     string guess;
     do
     {
-        guess = get_string("You have 6 tires, to guess %i-letter word", lword);
-    } while (isvalid_guess(lword, guess));
-    return tolower(guess)    
+        guess = get_string("Input a %i-letter word: ", wordsize);
+    }
+    while (strlen(guess) != wordsize);
 
+
+    return guess;
 }
 
+
+int check_word(string guess, int wordsize, int status[], string choice)
+{
+    int score = 0;
+
+    // compare guess to choice and score points as appropriate, storing points in status
+
+    // iterate over each letter of the guess
+    for (int i = 0; i < wordsize; i++)
+    {
+        // iterate over each letter of the choice
+        for (int j = 0; j < wordsize; j++)
+        {
+            // compare the current guess letter to the current choice letter
+            //    // if they're the same position in the word, score EXACT points (green) and break so you don't compare that letter further
+            //  // if it's in the word, but not the right spot, score CLOSE point (yellow)
+            if (guess[i] == choice[j] && i == j)
+            {
+                status[i] = EXACT;
+                score += EXACT;
+                break;
+            }
+            else if (guess[i] == choice[j])
+            {
+                status[i] = CLOSE;
+                score += CLOSE;
+                break;
+            }
+        }
+    }
+
+    // keep track of the total score by adding each individual letter's score from above
+    return score;
+}
+
+
+void print_word(string guess, int wordsize, int status[])
+{
+    // print word character-for-character with correct color coding, then reset terminal font to normal
+    string color;
+    for (int i = 0; i < wordsize; i++)
+    {
+
+        if (status[i] == 2)
+        {
+            color = GREEN;
+        }
+        else if (status[i] == 1)
+        {
+            color = YELLOW;
+        }
+        else if (status[i] == 0)
+        {
+            color = RED;
+        }
+        printf("%s%c", color, guess[i]);
+
+    }
+
+    printf("\n");
+    return;
+}

@@ -98,6 +98,7 @@ int main(int argc, string argv[])
     return 0;
 }
 
+
 string get_guess(int wordsize)
 {
     string guess = "";
