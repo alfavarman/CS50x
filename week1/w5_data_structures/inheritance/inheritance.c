@@ -36,10 +36,23 @@ int main(void)
     free_family(p);
 }
 
+// return random allel from given ancestor
+char get_ancestor_random_allele(person ancestor)
+{
+    return (char)(ancestor.alleles[rand() % (sizeof(ancestor.alleles) / sizeof(ancestor.alleles[0]))]);
+}
+
 // Create a new individual with `generations`
 person *create_family(int generations)
 {
-    // TODO: Allocate memory for new person
+    //  Allocate memory for new person
+    person *new_person = calloc(1, sizeof(person));
+    if (new_person == NULL)
+    {
+        printf("Not enough memory!");
+        free(new_person);
+        return NULL;
+    }
 
     // If there are still generations left to create
     if (generations > 1)
@@ -48,33 +61,54 @@ person *create_family(int generations)
         person *parent0 = create_family(generations - 1);
         person *parent1 = create_family(generations - 1);
 
-        // TODO: Set parent pointers for current person
+        // Set parent pointers for current person
+        new_person->parents[0] = parent0;
+        new_person->parents[1] = parent1;
 
-        // TODO: Randomly assign current person's alleles based on the alleles of their parents
+        //  Randomly assign current person's alleles based on the alleles of their parents
+        new_person->alleles[0] = get_ancestor_random_allele(*new_person->parents[0]);
+        new_person->alleles[1] = get_ancestor_random_allele(*new_person->parents[1]);
 
     }
 
     // If there are no generations left to create
     else
     {
-        // TODO: Set parent pointers to NULL
+        // Set parent pointers to NULL
+        // calloc initialize all values to 0
 
-        // TODO: Randomly assign alleles
+        //  Randomly assign alleles
+        new_person->alleles[0] = random_allele();
+        new_person->alleles[1] = random_allele();
 
     }
 
-    // TODO: Return newly created person
-    return NULL;
+    // Return newly created person
+    return new_person;
 }
 
 // Free `p` and all ancestors of `p`.
 void free_family(person *p)
 {
-    // TODO: Handle base case
+    // Handle base case
+    if (p == NULL)
+    {
+        return;
+    }
 
-    // TODO: Free parents recursively
+    // Free parents recursively
+    if (p->parents[0] != NULL)
+    {
+        free_family(p->parents[0]);
+    }
 
-    // TODO: Free child
+    if (p->parents[1] != NULL)
+    {
+        free_family(p->parents[1]);
+    }
+
+    // Free child
+    free(p);
 
 }
 
@@ -133,3 +167,27 @@ char random_allele()
         return 'O';
     }
 }
+
+
+// inheritance/ $ valgrind ./inheritance
+// ==18193== Memcheck, a memory error detector
+// ==18193== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+// ==18193== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+// ==18193== Command: ./inheritance
+// ==18193== 
+// Child (Generation 0): blood type AB
+//     Parent (Generation 1): blood type AA
+//         Grandparent (Generation 2): blood type BA
+//         Grandparent (Generation 2): blood type AA
+//     Parent (Generation 1): blood type BB
+//         Grandparent (Generation 2): blood type BO
+//         Grandparent (Generation 2): blood type AB
+// ==18193== 
+// ==18193== HEAP SUMMARY:
+// ==18193==     in use at exit: 0 bytes in 0 blocks
+// ==18193==   total heap usage: 7 allocs, 7 frees, 168 bytes allocated
+// ==18193== 
+// ==18193== All heap blocks were freed -- no leaks are possible
+// ==18193== 
+// ==18193== For lists of detected and suppressed errors, rerun with: -s
+// ==18193== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
