@@ -1,0 +1,1 @@
+SELECT AVG(energy) as energy, AVG(valence) as valence, AVG(danceability) as danceability FROM songs;
