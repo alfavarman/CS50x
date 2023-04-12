@@ -1,0 +1,21 @@
+<! DOCTYPE html>
+<html lang="en">
+    <head>
+        <script>
+            function welcome()
+            {
+                let name = document.querySelector('#name').value;
+                alert('Hay ' + name);
+            }
+        </script>
+        <title>
+            Hello title
+        </title>
+    </head>
+    <body>
+        <form onsubmit="welcome(); return false;">
+            <input autocomplete="off" autofocus id="name" placeholder="Name" type="text">
+            <button type="submit"> Welcome </button>
+        </form>
+    </body>
+</html>
