@@ -13,3 +13,31 @@ dropdown menu:
  timer %i """shows positive int i minutes blocade is on since switch on, if i = 0 blockade must be swithc off by user"""
  settings """ opens settings page in new tab"""
 
+steps:
+
+Create the manifest file: Create a manifest.json file in your extension's root directory. In this file, define the basic information about your extension, such as its name, version, permissions, and background scripts.
+
+Create the user interface: Create the HTML, CSS, and JavaScript files for your extension's user interface. You can create a popup.html file that displays a switch to turn the extension on or off, and a timer to show how long the blockade is on since switch on. You can also create a list.html file that displays the block list and allows users to add or remove URLs.
+
+Write the JavaScript code: In your JavaScript code, define an event listener for the switch in popup.html. When the switch is turned on, you can use the chrome.webRequest API to block access to URLs that match the URLs in your block list. When the switch is turned off, you can remove the block.
+
+Store the block list: Store the block list in a CSV file or in the chrome.storage API. You can create a "block_list.csv" file that contains the URLs and their categories.
+
+Add a timer: Use the setTimeout() function to set a timer for the blockade. When the timer expires, you can remove the block.
+
+Add a right-click menu: Use the chrome.contextMenus API to create a right-click menu that allows users to switch the extension on or off, manage the block list, and access the settings page.
+
+Test and publish: Test your extension by loading it as an unpacked extension in Chrome, and make any necessary adjustments. Once you're satisfied with your extension, publish it to the Chrome Web Store.
+
+To install your extension in Chrome, users can follow these steps:
+
+Go to the Chrome Web Store.
+
+Search for your extension by name or keyword.
+
+Click on the extension's listing.
+
+Click on the "Add to Chrome" button.
+
+Follow the prompts to install the extension.
+
