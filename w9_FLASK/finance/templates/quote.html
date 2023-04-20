@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Get Quotes
+{% endblock %}
+
+{% block main %}
+    <form action="/quote" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="ticker" name="symbol" placeholder="TICKER" type="text">
+        </div>
+        <div class="mb-3">
+            <p>Type Ticker of instrument you looking for</p>
+        </div>
+        <button class="btn btn-primary" type="submit">Quote</button>
+    </form>
+    <div class="container-fluid py-5 text-center">
+        <table text-align="center">
+            {% if values %}
+            <thead class="mb-3">
+                <tr>
+                    <th>Quotation</th>
+                </tr>
+            </thead>
+            <tbody class="mb-3">
+
+                <tr>
+                    <th>TICKER</th><th>{{ values.symbol }}</th>
+                </tr>
+                <tr>
+                    <th>NAME</th><th>{{ values.name }}</th>
+                </tr>
+                <tr>
+                    <th>PRICE</th><th>{{ values.price|usd }}</th>
+                </tr>
+            </tbody>
+            {% endif %}
+        </table>
+    </div>
+
+{% endblock %}

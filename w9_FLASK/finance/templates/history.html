@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Transaction History
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+
+    <h2>All Position</h2>
+    <table class="table table-striped table-hover text-center">
+        <thead>
+            <tr>
+                <th> ticker</th>
+                <th> position quantity </th>
+                <th> transction price </th>
+                <th> transction Buy/Sell </th>
+                <th> transction date* </th>
+                <th> transaction time* </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row.ticker }}</td>
+                <td>{{ row.quantity }}</td>
+                <td>{% if row.position == "B" %} Buy {% else %} Sell {% endif %}</td>
+                <td>{{ row.price|usd }}</td>
+                <td>{{ row.date }}</td>
+                <td>{{ row.time }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h4>*date time local to user location at moment of transaction</h4>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sell Stocks
+{% endblock %}
+
+{% block main %}
+    <form action="/sell" method="post">
+        <div class="mb-3 row">
+            <label for="symbol">Which stock would you like to sell?</label>
+            <select class="form-control" name="symbol" id="symbol" required>
+                <option value="" selected disabled hidden>Choose a stock symbol</option>
+                {% for position in portfolio %}
+                <option value="{{position.ticker}}" data-position="{{position.position_quantity}}">{{position.ticker}}</option>
+                {% endfor %}
+            </select>
+            <div id="quantity-container">
+                <label for="shares">Quantity of shares to sell:</label>
+                <input autocomplete="on" autofocus class="form-control mx-auto w-auto" required="true" id="shares" name="shares" placeholder="Quantity" type="number" min="1">
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">SELL</button>
+    </form>
+    <script src="{{ url_for('static', filename='js/sell.js') }}"></script>
+{% endblock %}
+
