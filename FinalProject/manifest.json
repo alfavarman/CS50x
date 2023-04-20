@@ -1,0 +1,35 @@
+{
+    "name": "Block List",
+    "version": "1.0",
+    "manifest_version": 1,
+    "description": "A Chrome extension that allows users to block access to certain URLs based on a predefined list.",
+    "icons": {
+      "active": "active128.png",
+      "inactive": "inactive128.png"
+    },
+  
+    "permissions": [
+      "webRequest",
+      "webRequestBlocking",
+      "storage"
+    ],
+    "background": {
+      "scripts": ["background.js"],
+      "persistent": true
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+      }
+    ],
+    "browser_action": {
+      "default_title": "Block List",
+      "default_popup": "popup.html",
+      "default_icon": {
+        "active": "active128.png",
+        "inactive": "inactive128.png"
+      }
+    }
+  }
+  
