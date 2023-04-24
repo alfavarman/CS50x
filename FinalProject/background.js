@@ -65,7 +65,7 @@ chrome.webRequest.onBeforeRequest.addListener(
                 title: 'Productivity bloacker',
                 message: 'Access to ' + url + ' has been blocked.',
               });
-              // cancel-block access
+              // cancel request
               return { cancel: true };
             }
           }
@@ -73,7 +73,39 @@ chrome.webRequest.onBeforeRequest.addListener(
       }
     });
   },
+  // for all urls
   { urls: ['<all_urls>'] },
+
+  // array of action
   ['blocking']
 );
 
+//menu 
+let isOn = true;
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+  // differ clicked button on extensiton icone
+  // left click (0ledt 1middle 2right)
+  if (tab.button === 0) { 
+    // Toggle the state of the extension
+    isOn = !isOn;
+
+    // Update the icon based on the new state
+    const iconPath = isOn ? 'on_icon.png' : 'off_icon.png';
+    chrome.browserAction.setIcon({ path: iconPath });
+
+    // Send a message to the content script to update its state
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, { switch: isOn });
+    });
+  }
+});
+
+// Create the context menu
+chrome.contextMenus.create({
+  title: 'My Extension',
+  contexts: ['browser_action'],
+  onclick: function() {
+    // Do something when the menu item is clicked
+  }
+});
