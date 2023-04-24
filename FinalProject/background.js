@@ -11,6 +11,7 @@ chrome.browserAction.onClicked.addListener(function (tab) {
   }
 });
 
+import { updateExtensionState } from './state.js';
 function updateExtensionState(isOn) {
   // Update the icon based on the new state
   const iconPath = isOn ? 'on_icon.png' : 'off_icon.png';
@@ -25,40 +26,15 @@ function updateExtensionState(isOn) {
   chrome.storage.sync.set({ switch: isOn });
 }
 
+import { webListener } from './web-listener.js';
+
 // listen webRequest: to edit or cancell them
 chrome.webRequest.onBeforeRequest.addListener(
-  function (details) {
-    // if switch
-    chrome.storage.sync.get('switch', function (data) {
-      if (data.switch) {
-        // load block_list
-        chrome.storage.sync.get('blockList', function (data) {
-          var blockList = data.blockList;
-
-          // check for url in the list
-          for (let i = 0; i < blockList.length; i++) {
-            var url = blockList[i].url;
-            //
-            if (details.url.indexOf(url) !== -1) {
-              // inform url is currently blcock
-              chrome.notifications.create({
-                type: 'basic',
-                title: 'Productivity bloacker',
-                message: 'Access to ' + url + ' has been blocked.',
-              });
-              // cancel request
-              return { cancel: true };
-            }
-          }
-        });
-      }
-    });
-  },
-  // for all urls
+  webListener,
   { urls: ['<all_urls>'] },
-  // array of action
   ['blocking']
 );
+
 
 // load cvs file
 fetch(chrome.runtime.getURL('block_list.csv'))
@@ -81,6 +57,7 @@ fetch(chrome.runtime.getURL('block_list.csv'))
   });
 
 // menu
+import { createContextMenus } from './context-menu.js';
 // menu items
 const contextMenuItems = [
   { 
@@ -106,19 +83,11 @@ const contextMenuItems = [
   { 
     id: 'about',
     title: 'About',
-    onclick: showMessage.bind(null, 'This is the about page.')
+    onclick: showMessage.bind(null, 'This is Final Project of CS50X')
   }
 ];
 
-// Create the context menu
-for (const item of contextMenuItems) {
-  chrome.contextMenus.create({
-    id: item.id,
-    title: item.title,
-    contexts: ['browser_action'],
-    onclick: item.onclick
-  });
-}
+createContextMenus(contextMenuItems);
 
 // Define the onclick handlers for the context menu items
 function toggleSwitch() {
