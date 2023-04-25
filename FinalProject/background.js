@@ -1,4 +1,7 @@
-// set extenstion state
+import { webListener } from './web-listener.js';
+import { updateExtensionState, toggleSwitch } from './state.js';
+import { createContextMenus } from './context-menu.js';
+
 // listen for action
 let isOn = true;
 chrome.browserAction.onClicked.addListener(function (tab) {
@@ -11,54 +14,35 @@ chrome.browserAction.onClicked.addListener(function (tab) {
   }
 });
 
-import { updateExtensionState } from './state.js';
-function updateExtensionState(isOn) {
-  // Update the icon based on the new state
-  const iconPath = isOn ? 'on_icon.png' : 'off_icon.png';
-  chrome.browserAction.setIcon({ path: iconPath });
-
-  // Send a message to the content script to update its state
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, { switch: isOn });
-  });
-
-  // Store the new state in Chrome storage
-  chrome.storage.sync.set({ switch: isOn });
-}
-
-import { webListener } from './web-listener.js';
-
-// listen webRequest: to edit or cancell them
+// listen webRequest: to edit or cancel them
 chrome.webRequest.onBeforeRequest.addListener(
   webListener,
   { urls: ['<all_urls>'] },
   ['blocking']
 );
 
-
-// load cvs file
+// load csv file
 fetch(chrome.runtime.getURL('block_list.csv'))
   .then((response) => response.text())
   .then((text) => {
-    // phrase is to array blockList
+    // parse it into array blockList
     const blockList = [];
     const rows = text.split('\n');
 
-    // read all rows
+    // include all rows
     for (let i = 0; i < rows.length; i++) {
       const [url, category] = rows[i].split(',');
       blockList.push({ url, category });
     }
 
-    // store it
     chrome.storage.local.set({ blockList }, () => {
       console.log('Block list loaded');
     });
   });
 
-// menu
+// context menu
 import { createContextMenus } from './context-menu.js';
-// menu items
+
 const contextMenuItems = [
   { 
     id: 'switch',
