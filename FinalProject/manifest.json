@@ -1,11 +1,13 @@
 {
-    "name": "Block List",
-    "version": "1.0",
-    "manifest_version": 1,
+    "name": "Productivity Blocker",
+    "version": "2.1",
+    "manifest_version": 2,
     "description": "A Chrome extension that allows users to block access to certain URLs based on a predefined list.",
     "icons": {
-      "active": "active128.png",
-      "inactive": "inactive128.png"
+      "16": "./icons/active16.png",
+      "32": "./icons/active32.png",
+      "48": "./icons/active48.png",
+      "128": "./icons/active128.png"
     },
   
     "permissions": [
@@ -26,10 +28,13 @@
     "browser_action": {
       "default_title": "Block List",
       "default_popup": "popup.html",
-      "default_icon": {
-        "active": "active128.png",
-        "inactive": "inactive128.png"
-      }
+      "default_icon": "./icons/active128.png"
     }
   }
-  
+
+
+
+      // "inactive16": "inactive16.png",
+      // "inactive32": "inactive32.png",
+      // "inactive48": "inactive48.png",
+      // "inactive128": "inactive128.png"
