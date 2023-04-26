@@ -1,111 +1,98 @@
-import { webListener } from './web-listener.js';
-import { updateExtensionState, toggleSwitch } from './state.js';
-import { createContextMenus } from './context-menu.js';
+// Fetch the block list file and save it to storage
+fetch(chrome.runtime.getURL('block_list.csv'))
+  .then(response => response.text())
+  .then(text => {
+    var lines = text.split('\n').filter(line => line.trim() !== '');
+    var blockList = lines.map(line => line.split(',')[0].trim());
+    chrome.storage.local.set({ 'blockList': blockList });
+  })
+  .catch(error => console.error('Error fetching block list file:', error));
+  console.log('list fetched');
 
-// listen for action
-let isOn = true;
-chrome.browserAction.onClicked.addListener(function (tab) {
-  // differ clicked button on extensiton icone
-  // left click (0ledt 1middle 2right)
-  if (tab.button === 0) {
-    // Toggle the state of the extension
-    isOn = !isOn;
-    updateExtensionState(isOn);
+// Set the extension on/off switch to off by default
+chrome.storage.local.get('extensionOn', function(result) {
+  if (!result.extensionOn) {
+    chrome.storage.local.set({ 'extensionOn': false });
   }
+  console.log('extensionOn', result.extensionOn);
 });
 
-// listen webRequest: to edit or cancel them
+// Fetch the block list file and save it to storage
+fetch(chrome.runtime.getURL('block_list.csv'))
+  .then(response => response.text())
+  .then(text => {
+    var lines = text.split('\n').filter(line => line.trim() !== '');
+    var blockList = lines.map(line => line.split(',')[0].trim());
+    chrome.storage.local.set({ 'blockList': blockList });
+    console.log('list fetched');
+  })
+  .catch(error => console.error('Error fetching block list file:', error));
+
+// Set the extension on/off switch to off by default
+chrome.storage.local.get('extensionOn', function(result) {
+  if (!result.extensionOn) {
+    chrome.storage.local.set({ 'extensionOn': false });
+  }
+  console.log('extensionOn', result.extensionOn);
+});
+
+// Listen for the extension icon click event
+chrome.browserAction.onClicked.addListener(function(tab) {
+  // Update the extension on/off switch
+  chrome.storage.local.get('extensionOn', function(result) {
+    var extensionOn = !result.extensionOn;
+    chrome.storage.local.set({ 'extensionOn': extensionOn });
+
+    // Update the extension icon based on the switch state
+    if (extensionOn) {
+      chrome.browserAction.setIcon({ path: {
+        "16": "./icons/active16.png",
+        "32": "./icons/active32.png",
+        "48": "./icons/active48.png",
+        "128": "./icons/active128.png"
+      }});
+      console.log('extensionOn', extensionOn);
+    } else {
+      chrome.browserAction.setIcon({ path: {
+        "16": "./icons/inactive16.png",
+        "32": "./icons/inactive32.png",
+        "48": "./icons/inactive48.png",
+        "128": "./icons/inactive128.png"
+      }});
+      console.log('extensionOn', extensionOn);
+    }
+  });
+});
+
+
 chrome.webRequest.onBeforeRequest.addListener(
-  webListener,
-  { urls: ['<all_urls>'] },
-  ['blocking']
+  function(details) {
+    // Check if the extension is on
+    return new Promise(resolve => {
+      chrome.storage.local.get('extensionOn', function(result) {
+        if (result.extensionOn) {
+          // Check if the requested URL is in the block list
+          chrome.storage.local.get('blockList', function(result) {
+            var blockList = result.blockList || [];
+            if (blockList.length > 0) {
+              console.log('block list not empty')
+            };
+            if (blockList.includes(details.url)) {
+              // Block the request
+              resolve({redirectUrl:"javascript:"});
+            } else {
+              // Don't block the request
+              resolve({});
+            }
+          })
+        } else {
+          // Don't block the request
+          resolve({});
+        }
+      });
+    });
+  },
+  { urls: ["<all_urls>"]}, 
+  ["blocking"]
 );
 
-// load csv file
-fetch(chrome.runtime.getURL('block_list.csv'))
-  .then((response) => response.text())
-  .then((text) => {
-    // parse it into array blockList
-    const blockList = [];
-    const rows = text.split('\n');
-
-    // include all rows
-    for (let i = 0; i < rows.length; i++) {
-      const [url, category] = rows[i].split(',');
-      blockList.push({ url, category });
-    }
-
-    chrome.storage.local.set({ blockList }, () => {
-      console.log('Block list loaded');
-    });
-  });
-
-// context menu
-import { createContextMenus } from './context-menu.js';
-
-const contextMenuItems = [
-  { 
-    id: 'switch',
-    title: 'Switch',
-    onclick: toggleSwitch
-  },
-  { 
-    id: 'blockList',
-    title: 'Block Lists',
-    onclick: openPage.bind(null, 'block_list.html')
-  },
-  { 
-    id: 'timer',
-    title: 'Timer',
-    onclick: showTimer
-  },
-  { 
-    id: 'settings',
-    title: 'Settings',
-    onclick: openPage.bind(null, 'settings.html')
-  },
-  { 
-    id: 'about',
-    title: 'About',
-    onclick: showMessage.bind(null, 'This is Final Project of CS50X')
-  }
-];
-
-createContextMenus(contextMenuItems);
-
-// Define the onclick handlers for the context menu items
-function toggleSwitch() {
-  chrome.storage.sync.get('switch', function(data) {
-    const newState = !data.switch;
-    chrome.storage.sync.set({ switch: newState }); 
-
-    const iconPath = newState ? 'active128.png' : 'inactive128.png';
-    const title = newState ? 'Focus ON' : 'Focus OFF';
-
-    chrome.browserAction.setIcon({ path: iconPath });
-    chrome.browserAction.setTitle({ title: title });
-
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, { switch: newState });
-    });
-  });
-}
-
-function openBlockListPage() {
-  chrome.tabs.create({ url: chrome.extension.getURL('block_list.html') });
-}
-
-function showTimer() {
-  chrome.storage.sync.get('timer', function(data) {
-    const minutes = data.timer || 0;
-    alert(`Blockade is on for ${minutes} minutes.`);
-  });
-}
-
-function openSettingsPage() {
-  chrome.tabs.create({ url: chrome.extension.getURL('settings.html') });
-}
-
-function openAboutPage() {
-  alert('This is the about page.');
-}

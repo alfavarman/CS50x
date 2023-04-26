@@ -28,4 +28,4 @@ function webListener (details) {
     });
 }
 
-export { webListener };
+export default  webListener ;

@@ -13,9 +13,11 @@
     "permissions": [
       "webRequest",
       "webRequestBlocking",
-      "storage"
+      "storage",
+      "contextMenus",
+      "<all_urls>"
     ],
-    "background": {
+    "background":{
       "scripts": ["background.js"],
       "persistent": true
     },
@@ -27,7 +29,6 @@
     ],
     "browser_action": {
       "default_title": "Block List",
-      "default_popup": "popup.html",
       "default_icon": {
         "16": "./icons/inactive16.png",
         "32": "./icons/inactive32.png",
@@ -36,10 +37,3 @@
       }
     }
   }
-
-
-
-      // "inactive16": "inactive16.png",
-      // "inactive32": "inactive32.png",
-      // "inactive48": "inactive48.png",
-      // "inactive128": "inactive128.png"
