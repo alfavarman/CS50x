@@ -1,7 +1,7 @@
 
 # Productivity Blocker
 
-Productivity Blocker Light is a Chrome extension that allows users to block access to certain URLs defined in manifest (hardcoded). This can help users stay focused on their work and avoid distractions.
+Productivity Blocker Light is a Chrome extension that allows users to block access to certain URLs defined in manifest (hardcoded). This can help users stay focused on their work and avoid distractions. Blocker Light use only manifest.json and css. It is the simplest blocker solution rather for educational purpouses.
 
 ## Installation
 
