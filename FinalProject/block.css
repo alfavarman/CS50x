@@ -1,12 +1,29 @@
-@keyframes move_clouds {
-    from {
-      transform: translateX(-100%);
+html::before {
+    content: 'URL blocked by Productivity Blocker';
+    color: #fff;
+    font-family: monospace;
+    font-size: 5vw;
+    font-weight: bold;
+    text-align: center;
+    z-index: 1;
+    animation: pulse 1s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
     }
-    to {
-      transform: translateX(100%);
+    25% {
+      transform: scale(1.3);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
     }
   }
-  
+
   html {
     background: radial-gradient(68.34% 50% at 50% 50%, #2D9AFF 0%, #41DEE8 0%, #A22DFF 100%);
     height: 100vh;
@@ -16,17 +33,6 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
-  }
-  
-  .clouds {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("https://i.imgur.com/UpwnWtj.png");
-    background-repeat: repeat-x;
-    animation: move_clouds 10s linear infinite;
   }
   
   html::before {
