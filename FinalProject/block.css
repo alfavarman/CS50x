@@ -35,16 +35,6 @@ html::before {
     overflow: hidden;
   }
   
-  html::before {
-    content: 'URL blocked by Productivity Blocker';
-    color: #fff;
-    font-family: monospace;
-    font-size: 5vw;
-    font-weight: bold;
-    text-align: center;
-    z-index: 1;
-  }
-  
   body {
     display: none !important;
   }
