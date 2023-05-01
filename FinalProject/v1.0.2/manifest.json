@@ -1,0 +1,35 @@
+{
+  "name": "Productivity Blocker",
+  "version": "1.0.2",
+  "manifest_version": 3,
+  "description": "A Chrome extension that allows users to block access to certain URLs based on a predefined list.",
+  "icons": {
+    "16": "./icons/inactive16.png",
+    "32": "./icons/inactive32.png",
+    "48": "./icons/active48.png",
+    "128": "./icons/active128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.facebook.com/*",
+        "https://www.netflix.com/*"
+      ],
+      "css": [
+        "./block.css"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "./block.css"
+      ],
+      "matches": [
+        "https://www.facebook.com/*",
+        "https://www.netflix.com/*"
+      ]
+    }
+  ]
+}
