@@ -1,24 +1,27 @@
 // variable for switch
-var isOn = true;
+let isOn = true;
 
-browser.browserAction.onClicked.addListener((tab) => {
-  // set switch
-  isOn = !isOn;
-  // set icon
-  updateIcon(isOn);
-  // inform content script
-  updateContentScripts(isOn);
+chrome.action.onClicked.addListener((tab) => {
+  console.log("Extension icon clicked");
+  if (tab.button === 0) {
+    // set switch
+    isOn = !isOn;
+    // set icon
+    updateIcon(isOn);
+    // inform content script
+    updateContentScripts(isOn);
+  }
 });
 
 // functions definitions //
 
 function updateIcon(isOn) {
   const iconPath = isOn ? "./icons/active16.png" : "./icons/inactive16.png";
-  browser.browserAction.setIcon({ path: iconPath});
+  chrome.action.setIcon({ path: iconPath });
 }
 
 function updateContentScripts(isEnabled) {
-  const contentScripts = browser.contentScripts;
+  const contentScripts = chrome.contentScripts;
   if (isEnabled) {
     contentScripts.register({
       matches: [
@@ -26,7 +29,7 @@ function updateContentScripts(isEnabled) {
         "https://www.netflix.com/*"
       ],
       css: [
-        { file: "./block.css" }
+        "./css/block.css"
       ]
     });
   } else {
@@ -36,7 +39,7 @@ function updateContentScripts(isEnabled) {
         "https://www.netflix.com/*"
       ],
       css: [
-        { file: "./block.css" }
+        "./css/block.css"
       ]
     });
   }
