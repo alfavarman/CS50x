@@ -6,19 +6,19 @@ chrome.storage.local.get('isOn', function(result) {
   if (result.isOn !== undefined) {
     isOn = result.isOn;
     updateIcon(isOn);
-    updateContentScripts(isOn);
+    executeCss(isOn);
   }
 });
 
 
-chrome.action.onClicked.addListener((tab, info) => {
+chrome.action.onClicked.addListener((tabId, info) => {
   console.log("Extension icon clicked");
   // set switch
   isOn = !isOn;
   // set icon
   updateIcon(isOn);
   // inform content script
-  updateContentScripts(isOn);
+  executeCss(isOn);
   // save switch state to storage
   chrome.storage.local.set({isOn: isOn});
   });
@@ -39,31 +39,33 @@ function updateIcon(isOn) {
   };
   chrome.action.setIcon({path: iconPath});
 }
+// Example: Execute CSS based on extension status and tab URL changes
+function executeCss(isOn) {
+  const matches = [
+    'https://www.facebook.com/*',
+    'https://www.netflix.com/*'
+  ];
 
-function updateContentScripts(isOn) {
-  console.log("updateContentScripts fun execute with isOn variable: " + isOn);
-  const contentScripts = chrome.scripting;
   if (isOn) {
-    contentScripts.register({
-      matches: [
-        "https://www.facebook.com/*",
-        "https://www.netflix.com/*"
-      ],
-      css: [
-        { file: "./css/block.css" }
-      ]
+    chrome.tabs.query({ url: matches }, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.scripting.insertCSS({
+          target: { tabId: tab.id },
+          files: ['./css/block.css']
+        });
+      });
     });
   } else {
-    contentScripts.unregister({
-      matches: [
-        "https://www.facebook.com/*",
-        "https://www.netflix.com/*"
-      ],
-      css: [
-        { file: "./css/block.css" }
-      ]
+    chrome.tabs.query({ url: matches }, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.scripting.removeCSS({
+          target: { tabId: tab.id },
+          files: ['./css/block.css']
+        });
+      });
     });
   }
 }
+
 
 console.log("Extension loaded");

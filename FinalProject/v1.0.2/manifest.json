@@ -24,27 +24,28 @@
       "type": "toggle"
     }
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://www.facebook.com/*",
-        "https://www.netflix.com/*"
-      ],
-      "css": [
-        "./css/block.css" 
-      ]
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "./css/block.css"
-      ],
-      "matches": [
-        "https://www.facebook.com/*",
-        "https://www.netflix.com/*"
-      ]
-    }
-  ],
-  "permissions": ["scripting", "storage", "tabs"]
+  // "content_scripts": [
+  //   {
+  //     "matches": [
+  //       "https://www.facebook.com/*",
+  //       "https://www.netflix.com/*"
+  //     ],
+  //     "css": [
+  //       "./css/block.css" 
+  //     ]
+  //   }
+  // ],
+  "host_permissions": ["<all_urls>"],
+  // "web_accessible_resources": [
+  //   {
+  //     "resources": [
+  //       "./css/block.css"
+  //     ],
+  //     "matches": [
+  //       "https://www.facebook.com/*",
+  //       "https://www.netflix.com/*"
+  //     ]
+  //   }
+  // ],
+  "permissions": ["scripting", "storage", "activeTab", "tabs"]
 }
