@@ -10,10 +10,24 @@ chrome.storage.local.get('isOn', function(result) {
   }
 });
 
+chrome.tabs.onCreated.addListener((tab) => {
+  // execute if newly open tabs with url.'
+  console.log("tabs.oncreated triggered with tab.url: " + tab.url);
+  if (tab.url) {
+    executeCss(tab.id);
+  }
+});
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  console.log("tabs.onUpdated triggered with tabId: " + tabId);
   if (changeInfo.status === "complete") {
     executeCss(tabId);
   }
+});
+
+chrome.webNavigation.onCommitted.addListener((details) => {
+  console.log("webNavigation.onCommitted triggered");
+  executeCss(details.tabId);
 });
 
 chrome.action.onClicked.addListener((tab) => {
@@ -47,9 +61,10 @@ function updateIcon() {
 }
 // Example: Execute CSS based on extension status and tab URL changes
 function executeCss(tabId) {
+
   const matches = [
-    'https://www.facebook.com/*',
-    'https://www.netflix.com/*'
+    'https://*.facebook.com/*',
+    'https://*.netflix.com/*'
   ];
   
   const cssDetails = {
@@ -65,17 +80,9 @@ function executeCss(tabId) {
     }
   };
 
-  if (tabId) {
-    chrome.tabs.get(tabId, (tab) => {
-      if (tab && matches.some((match) => tab.url.startsWith(match))) {
-        injectCss(tab);
-      }
-    });
-  } else {
-    chrome.tabs.query({ url: matches }, (tabs) => {
-      tabs.forEach(injectCss);
-    });
-  }
+  chrome.tabs.query({ url: matches }, (tabs) => {
+    tabs.forEach(injectCss);
+  });
 }
 
 
