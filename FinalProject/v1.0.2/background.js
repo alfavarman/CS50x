@@ -10,6 +10,11 @@ chrome.storage.local.get('isOn', function(result) {
   }
 });
 
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === "complete") {
+    executeCss(tabId);
+  }
+});
 
 chrome.action.onClicked.addListener((tab) => {
   console.log("Extension icon clicked");
@@ -41,7 +46,7 @@ function updateIcon() {
   chrome.action.setBadgeText({ text: isOn ? "ON" : "OFF" });
 }
 // Example: Execute CSS based on extension status and tab URL changes
-function executeCss() {
+function executeCss(tabId) {
   const matches = [
     'https://www.facebook.com/*',
     'https://www.netflix.com/*'
@@ -60,9 +65,17 @@ function executeCss() {
     }
   };
 
-  chrome.tabs.query({ url: matches }, (tabs) => {
-    tabs.forEach(injectCss);
-  });
+  if (tabId) {
+    chrome.tabs.get(tabId, (tab) => {
+      if (tab && matches.some((match) => tab.url.startsWith(match))) {
+        injectCss(tab);
+      }
+    });
+  } else {
+    chrome.tabs.query({ url: matches }, (tabs) => {
+      tabs.forEach(injectCss);
+    });
+  }
 }
 
 
