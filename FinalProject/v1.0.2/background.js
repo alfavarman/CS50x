@@ -5,27 +5,27 @@ var isOn = true;
 chrome.storage.local.get('isOn', function(result) {
   if (result.isOn !== undefined) {
     isOn = result.isOn;
-    updateIcon(isOn);
-    executeCss(isOn);
+    updateIcon();
+    executeCss();
   }
 });
 
 
-chrome.action.onClicked.addListener((tabId, info) => {
+chrome.action.onClicked.addListener((tab) => {
   console.log("Extension icon clicked");
   // set switch
   isOn = !isOn;
   // set icon
-  updateIcon(isOn);
+  updateIcon();
   // inform content script
-  executeCss(isOn);
+  executeCss();
   // save switch state to storage
   chrome.storage.local.set({isOn: isOn});
   });
 
 // functions definitions //
-function updateIcon(isOn) {
-  console.log("updateIcon fun execute with isOn variable: " + isOn);
+function updateIcon() {
+  console.log("updateIcon fun execute with variable isOn value: " + isOn);
   const iconPath = isOn ? {
     "16": "./icons/active16.png",
     "32": "./icons/active32.png",
@@ -38,33 +38,31 @@ function updateIcon(isOn) {
     "128": "./icons/inactive128.png"
   };
   chrome.action.setIcon({path: iconPath});
+  chrome.action.setBadgeText({ text: isOn ? "ON" : "OFF" });
 }
 // Example: Execute CSS based on extension status and tab URL changes
-function executeCss(isOn) {
+function executeCss() {
   const matches = [
     'https://www.facebook.com/*',
     'https://www.netflix.com/*'
   ];
+  
+  const cssDetails = {
+    target: { url: matches },
+    files: ["./css/block.css"],
+  };
 
-  if (isOn) {
-    chrome.tabs.query({ url: matches }, (tabs) => {
-      tabs.forEach((tab) => {
-        chrome.scripting.insertCSS({
-          target: { tabId: tab.id },
-          files: ['./css/block.css']
-        });
-      });
-    });
-  } else {
-    chrome.tabs.query({ url: matches }, (tabs) => {
-      tabs.forEach((tab) => {
-        chrome.scripting.removeCSS({
-          target: { tabId: tab.id },
-          files: ['./css/block.css']
-        });
-      });
-    });
-  }
+  const injectCss = (tab) => {
+    if (isOn) {
+      chrome.scripting.insertCSS({ ...cssDetails, target: { tabId: tab.id } });
+    } else {
+      chrome.scripting.removeCSS({ ...cssDetails, target: { tabId: tab.id } });
+    }
+  };
+
+  chrome.tabs.query({ url: matches }, (tabs) => {
+    tabs.forEach(injectCss);
+  });
 }
 
 
