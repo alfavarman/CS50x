@@ -1,21 +1,38 @@
+# Productivity Blocker Chrome Extension
 
-# Productivity Blocker
+A Chrome extension that allows users to block access to certain URLs based on a predefined list.
 
-Productivity Blocker Light is a Chrome extension that allows users to block access to certain URLs defined in manifest (hardcoded). This can help users stay focused on their work and avoid distractions. Blocker Light use only manifest.json and css. It is the simplest blocker solution rather for educational purpouses.
+## Features
+
+- Toggle the extension on/off with a single click.
+- Blocks access to specific URLs (e.g., Facebook and Netflix) when the extension is active.
+- Updates the extension icon and badge text to reflect the current status.
 
 ## Installation
 
-1. Clone the repository or download the source code as a ZIP file.
-2. Edit manifest.json and edit value of matches key (list of urls comma separated values)
-3. Open Google Chrome and go to chrome://extensions/.
-4. Enable "Developer mode" in the top right corner.
-5. Click "Load unpacked" and select the folder containing the extension files.
+1. Clone or download the repository to your local machine.
+2. Open Google Chrome and go to `chrome://extensions`.
+3. Enable the **Developer mode** toggle switch (top right corner).
+4. Click on the **Load unpacked** button.
+5. Select the folder where you cloned/downloaded the extension.
 
 ## Usage
 
-1. Open Google Chrome and go to chrome://extensions/ and set extenstion active
-2. While active all urls defined in manifest won't be accessible
-3. To unblock a URL go to chrome://extensions/ and set extenstion inactive
+1. Once installed, you'll see the extension icon in the Chrome toolbar.
+2. Click on the extension icon to toggle it on or off.
+3. When the extension is active (icon color is active), it will block access to specific URLs (e.g., Facebook and Netflix).
+4. When the extension is inactive (icon color is inactive), access to the blocked URLs will be allowed.
+5. The extension icon and badge text will reflect the current status (ON/OFF).
+
+## Customization
+
+You can customize the list of blocked URLs by modifying the `matches` array in the `executeCss()` function within the `background.js` file. Update the URLs to match your desired blocked websites.
+
+```javascript
+const matches = [
+  'https://www.facebook.com/*',
+  'https://www.netflix.com/*'
+];
 
 ## Features
 
