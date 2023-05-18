@@ -58,6 +58,20 @@ chrome.action.onClicked.addListener((tab) => {
   chrome.storage.local.set({isOn: isOn});
   });
 
+// Context menu 
+  chrome.contextMenus.create({
+    id: "options",
+    title: "Options",
+    contexts: ["browser_action"],
+  });
+  
+  // listen for click
+  chrome.contextMenus.onClicked.addListener((info, tab) => {
+    if (info.menuItemId === "options") {
+      chrome.tabs.create({ url: "options.html" });
+    }
+  });
+  
 // functions definitions //
 function updateIcon() {
   console.log("updateIcon fun execute with variable isOn value: " + isOn);
