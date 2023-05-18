@@ -68,7 +68,6 @@ body {
   .toggle.on .toggle-inner:before {
     transform: translateX(100%);
   }
-  }
   
   .toggle-label {
     margin-right: 10px;
