@@ -53,19 +53,35 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     addUrlButton.addEventListener("click", function () {
-      const newUrl = newUrlInput.value.trim();
-      if (newUrl !== "") {
-        chrome.storage.local.get("matches", function (result) {
-          if (result.matches !== undefined) {
-            const urls = result.matches;
-            urls.push(newUrl);
-            chrome.storage.local.set({ matches: urls }, function () {
-              displayBlockedUrls(urls);
-              newUrlInput.value = "";
+        const newUrl = newUrlInput.value.trim();
+        if (newUrl !== "") {
+          if (isValidUrl(newUrl)) {
+            chrome.storage.local.get("matches", function (result) {
+              if (result.matches !== undefined) {
+                const urls = result.matches;
+                urls.push(newUrl);
+                chrome.storage.local.set({ matches: urls }, function () {
+                  displayBlockedUrls(urls);
+                  newUrlInput.value = "";
+                });
+              }
             });
+          } else {
+            displayErrorMessage("Invalid input");
           }
-        });
+        }
+      });
+      
+      function isValidUrl(url) {
+        // regular expression to validate the URL format
+        const urlPattern = /^(https?|chrome):\/\/([^\s/$.?#]*\.)?[^\s/$.?#]+\.[^\s/$.?#]+(\/.*)\/$/;
+        return urlPattern.test(url);
       }
-    });
+      
+      function displayErrorMessage(message) {
+        const errorMessage = document.getElementById("error-message");
+        errorMessage.textContent = message;
+      }
+      
   });
   
