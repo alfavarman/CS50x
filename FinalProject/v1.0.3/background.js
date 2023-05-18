@@ -8,7 +8,7 @@ var matches = [
 ];
 
 // 
-chrome.storage.get('matches', function(result) {
+chrome.storage.local.get('matches', function(result) {
   if (result.matches === undefined) {
     chrome.storage.local.set({matches: matches});
   }

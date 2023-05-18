@@ -26,5 +26,5 @@
   },
   "options_page": "options.html",
   "host_permissions": ["<all_urls>"],
-  "permissions": ["webNavigation", "scripting", "storage", "activeTab", "tabs"]
+  "permissions": ["webNavigation", "scripting", "storage", "activeTab", "tabs", "contextMenus"]
 }
