@@ -22,17 +22,15 @@
       </div>
     </div>
 
-    <div class="option">
-      <h2>Blocked URLs</h2>
-      <div class="blocked-urls-box">
-        <ul id="blocked-urls-list">
-          <!-- URLs will be dynamically added here -->
-        </ul>
-      </div>
+    <h2>Blocked URLs</h2>
+    <p class="url-format">URLs should follow the Chrome URL pattern format. You can use wildcards (*) and placeholders ({placeholder}). For more information, refer to the <a href="https://developer.chrome.com/docs/extensions/mv3/match_patterns/" target="_blank">Chrome documentation</a>.</p>
+
+    <div class="blocked-urls-box">
+      <ul id="blocked-urls-list"></ul>
     </div>
 
-    <div class="option">
-      <input type="text" id="new-url-input" placeholder="Enter URL">
+    <div class="add-url-container">
+      <input type="text" id="new-url-input" placeholder="Enter URL (e.g., https://)">
       <button id="add-url-button">Add</button>
     </div>
   </div>
