@@ -86,9 +86,19 @@ function updateIcon() {
     "48": "./icons/inactive48.png",
     "128": "./icons/inactive128.png"
   };
-  chrome.action.setIcon({path: iconPath});
-  chrome.action.setBadgeText({ text: isOn ? "ON" : "OFF" });
+
+  // Retrieve the showBadgeText value from storage
+  chrome.storage.local.get('showBadgeText', function(result) {
+    const showBadgeText = result.showBadgeText !== undefined ? result.showBadgeText : true;
+
+    // Show or hide the badge text based on the showBadgeText value
+    const badgeText = showBadgeText ? (isOn ? "ON" : "OFF") : '';
+    chrome.action.setBadgeText({ text: badgeText });
+
+    chrome.action.setIcon({ path: iconPath });
+  });
 }
+
 // Example: Execute CSS based on extension status and tab URL changes
 function executeCss(tabId) {
   
