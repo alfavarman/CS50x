@@ -1,6 +1,6 @@
 {
   "name": "Productivity Blocker",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "manifest_version": 3,
   "description": "A Chrome extension that allows users to block access to certain URLs based on a predefined list.",
   "icons": {

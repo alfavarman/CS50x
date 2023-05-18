@@ -1,6 +1,22 @@
 // variable for switch
 var isOn = true;
 
+// global matches
+var matches = [
+  'https://*.facebook.com/*',
+  'https://*.netflix.com/*'
+];
+
+// 
+chrome.storage.get('matches', function(result) {
+  if (result.matches === undefined) {
+    chrome.storage.local.set({matches: matches});
+  }
+  else {
+    matches = result.matches
+  }
+});
+
 // Load switch state from storage
 chrome.storage.local.get('isOn', function(result) {
   if (result.isOn !== undefined) {
@@ -61,11 +77,6 @@ function updateIcon() {
 }
 // Example: Execute CSS based on extension status and tab URL changes
 function executeCss(tabId) {
-
-  const matches = [
-    'https://*.facebook.com/*',
-    'https://*.netflix.com/*'
-  ];
   
   const cssDetails = {
     target: { url: matches },
