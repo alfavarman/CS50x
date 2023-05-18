@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   
-    toggleSwitch.addEventListener("input", function () {
+    toggleSwitch.addEventListener("change", function () {
       const isOn = toggleSwitch.checked;
   
       // Save switch state to storage
