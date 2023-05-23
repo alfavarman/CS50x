@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // listen for switch change
   toggleSwitch.addEventListener("change", function () {
     const showBadgeText = toggleSwitch.checked;
     chrome.storage.local.set({ showBadgeText: showBadgeText });

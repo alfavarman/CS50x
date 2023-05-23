@@ -53,10 +53,13 @@ chrome.action.onClicked.addListener((tab) => {
 });
 
 // Context menu
-chrome.contextMenus.create({
-  id: 'options',
-  title: 'Options',
-  contexts: ['browser_action'],
+// remove all fixes duplicated id
+chrome.contextMenus.removeAll(function() {
+  chrome.contextMenus.create({
+    id: 'options',
+    title: 'Options',
+    contexts: ['browser_action'],
+  });
 });
 
 // Listen for click on context menu
