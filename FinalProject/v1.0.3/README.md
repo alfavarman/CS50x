@@ -19,24 +19,19 @@ A Chrome extension that allows users to block access to certain URLs based on a 
 ## Usage
 
 1. Once installed, you'll see the extension icon in the Chrome toolbar.
-2. Click on the extension icon to toggle it on or off.
+2. Click on the extension icon to toggle it on or off (Mouse left Click)
 3. When the extension is active (icon color is active), it will block access to specific URLs (e.g., Facebook and Netflix).
-4. When the extension is inactive (icon color is inactive), access to the blocked URLs will be allowed.
+4. When the extension is inactive (icon color is inactive), access to the blocked URLs will be allowed may required refresh of page.
 5. The extension icon and badge text will reflect the current status (ON/OFF).
+6. (Mouse Right click) Options page in context menu allowes: turn on/off text badges, add remove blocked urls.
+7. Use syntax of urls available on https://developer.chrome.com/docs/extensions/mv3/match_patterns/.
 
-## Customization
-
-You can customize the list of blocked URLs by modifying the `matches` array in the `executeCss()` function within the `background.js` file. Update the URLs to match your desired blocked websites.
-
-```javascript
-const matches = [
-  'https://www.facebook.com/*',
-  'https://www.netflix.com/*'
-];
 
 ## Features
 
 - Block access to specific URLs.
+- Turn On/Off
+- modify url list
 - Works in the background, so you can focus on your work without distractions.
 
 ## License
