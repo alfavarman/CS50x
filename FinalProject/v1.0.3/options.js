@@ -83,13 +83,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // regular expression to validate the URL format
     // shcema http https chrome ftp file *
     //^(https?|chrome|file|ftp|\*)\:\/\/(\*|\*\.(?!-)[a-z0-9\-]{2,}[a-zA-Z0-9].[a-zA-Z0-9]{2,63}|((?!-)[a-z0-9\-]*[a-zA-Z0-9]\.){1,4}(?!-)[a-z0-9\-]*[a-zA-Z0-9])?\/[^\s{}|\\^~\[\]]*
-    var protocol = /^(https?|chrome|file|ftp|\*);
+    var protocol = /^(https?|chrome|file|ftp|\*)/;
     // url with wildchar * - must ve followed by / or dot
-    var host = \:\/\/(\*|\*\.(?!-)[a-z0-9\-]{2,}[a-zA-Z0-9].[a-zA-Z0-9]{2,63}|((?!-)[a-z0-9\-]*[a-zA-Z0-9]\.){1,4}(?!-)[a-z0-9\-]*[a-zA-Z0-9])?;
+    var host = /:\/\/(\*|\*\.(?!-)[a-z0-9\-]*[a-zA-Z0-9]\.[a-zA-Z0-9]{2,63}|((?!-)[a-z0-9\-]*[a-zA-Z0-9]\.){1,4}(?!-)[a-z0-9\-]*[a-zA-Z0-9])?/;
     // path exlided with dangerous chars
-    var path = \/[^\s{}|\\^~\[\]]*/;
-    const urlPattern = protocol+host+path;
-    return urlPattern.test(url);
+    var path = /\/[^\s{}|\\^~\[\]]*/;
+    const urlRegexPattern =  new RegExp(protocol.source+host.source+path.source);
+    return urlRegexPattern.test(url);
   }
 
   function displayErrorMessage(message) {
@@ -97,3 +97,5 @@ document.addEventListener("DOMContentLoaded", function () {
     errorMessage.textContent = message;
   }
 });
+
+
