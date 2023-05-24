@@ -14,7 +14,6 @@
     {
       "matches": [
         "https://www.facebook.com/*",
-        "https://www.netflix.com/*"
       ],
       "css": [
         "./css/block.css"
@@ -24,7 +23,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "./block.css"
+        "./css/block.css"
       ],
       "matches": [
         "https://www.facebook.com/*",

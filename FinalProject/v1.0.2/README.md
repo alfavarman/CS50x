@@ -28,7 +28,7 @@ A Chrome extension that allows users to block access to certain URLs based on a 
 
 You can customize the list of blocked URLs by modifying the `matches` array in the `executeCss()` function within the `background.js` file. Update the URLs to match your desired blocked websites.
 
-```javascript
+javascript:
 const matches = [
   'https://www.facebook.com/*',
   'https://www.netflix.com/*'

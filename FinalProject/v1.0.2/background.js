@@ -57,7 +57,7 @@ function updateIcon() {
     "128": "./icons/inactive128.png"
   };
   chrome.action.setIcon({path: iconPath});
-  chrome.action.setBadgeText({ text: isOn ? "ON" : "OFF" });
+  //chrome.action.setBadgeText({ text: isOn ? "ON" : "OFF" });
 }
 // Example: Execute CSS based on extension status and tab URL changes
 function executeCss(tabId) {
